@@ -1,0 +1,8 @@
+
+exampleLog4j/\.settings/
+
+exampleLog4j/target/
+
+exampleLog4j/\.classpath
+
+exampleLog4j/\.project

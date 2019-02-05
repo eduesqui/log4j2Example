@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="log-path">../logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console-log" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+        </Console>
+        
+        <RollingFile name="trace-log" fileName="${log-path}/example.log"
+                     filePattern="${log-path}/example-%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="5000 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+        
+        <RollingFile name="error-log" fileName="${log-path}/example-error.log"
+                     filePattern="${log-path}/example-error-%d{yyyy-MM-dd}_%i.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="5000 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+    
+    	<Root additivity="false">
+            <AppenderRef ref="console-log"/>
+        </Root>
+        
+        <Logger name="com.eduesqui" level="trace" additivity="false">
+            <appender-ref ref="trace-log" level="trace"/>
+            <appender-ref ref="error-log" level="error"/>
+            <appender-ref ref="console-log" level="debug"/>
+        </Logger>
+         <!-- Log everything in hibernate -->
+	    <Logger name="org.hibernate" level="error" additivity="false">
+	      <AppenderRef ref="console-log" />
+	    </Logger>
+
+	    <!-- Log SQL statements -->
+	    <Logger name="org.hibernate.SQL" level="debug" additivity="false">
+	      <AppenderRef ref="console-log" />
+	      <AppenderRef ref="trace-log" />
+	    </Logger>
+
+	    <!-- Log JDBC bind parameters -->
+	    <Logger name="org.hibernate.type.descriptor.sql" level="error" additivity="false">
+	      <AppenderRef ref="console-log" />
+	      <AppenderRef ref="trace-log" />
+	    </Logger>
+        
+    </Loggers>
+</Configuration>
